@@ -1,7 +1,7 @@
+import { Database } from "../database/connection.js";
+import { User } from "../entity/user.entity.js";
 import { CreateUserType, UserType } from "../type/user.type.js";
 import { UserRepositoryBase } from "./base/user.repository.base.js";
-import { User } from "../entity/user.entity.js";
-import { Database } from "../database/connection.js";
 
 export class UserRepository implements UserRepositoryBase {
     async createNewUser(usuario: CreateUserType): Promise<UserType> {
@@ -25,5 +25,12 @@ export class UserRepository implements UserRepositoryBase {
         userToUpdate.lastName = user.lastName;
 
         return await userRepository.save(userToUpdate);
+    }
+
+    async receiveMessage(message: string, sender: UserType, users: UserType[]): Promise<void> {
+        users.map(user => {
+            if(user.id === sender.id) return;
+            console.log(`Mensagem: ${message} - Enviado por: ${sender.firstName} - Para: ${user.firstName}`)
+        })
     }
 }
